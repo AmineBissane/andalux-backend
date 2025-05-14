@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: andalux-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/andalux_db
+      SPRING_DATASOURCE_USERNAME: andalux_user
+      SPRING_DATASOURCE_PASSWORD: andalux_pass
+    networks:
+      - andalux-net
+
+  postgres:
+    image: postgres:16
+    container_name: andaluxdb
+    environment:
+      POSTGRES_DB: andalux_db
+      POSTGRES_USER: andalux_user
+      POSTGRES_PASSWORD: andalux_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - andalux_volume:/var/lib/postgresql/data
+      - ./src/main/resources/db/migration/V2__insert_anas_user.sql:/docker-entrypoint-initdb.d/01_insert_anas_user.sql
+      - ./src/main/resources/db/migration/V3__update_anas_password.sql:/docker-entrypoint-initdb.d/02_update_anas_password.sql
+    networks:
+      - andalux-net
+    restart: unless-stopped
+
+volumes:
+  andalux_volume:
+
+networks:
+  andalux-net:
+    driver: bridge

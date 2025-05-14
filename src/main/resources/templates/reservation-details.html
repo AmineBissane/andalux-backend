@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Details</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Reservation Details</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>ID:</strong> <span th:text="${reservation.id}"></span></p>
+            <p><strong>Name:</strong> <span th:text="${reservation.firstName + ' ' + reservation.lastName}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${reservation.email}"></span></p>
+            <p><strong>Phone:</strong> <span th:text="${reservation.phone}"></span></p>
+            <p><strong>Pickup Address:</strong> <span th:text="${reservation.pickupAddress}"></span></p>
+            <p><strong>Destination Address:</strong> <span th:text="${reservation.destinationAddress}"></span></p>
+            <p><strong>Pickup Date:</strong> <span th:text="${reservation.pickupDate}"></span></p>
+            <p><strong>Pickup Time:</strong> <span th:text="${reservation.pickupTime}"></span></p>
+            <p><strong>Number of Adults:</strong> <span th:text="${reservation.numberOfAdults}"></span></p>
+            <p><strong>Number of Children:</strong> <span th:text="${reservation.numberOfChildren}"></span></p>
+            <p><strong>Special Requests:</strong> <span th:text="${reservation.specialRequests}"></span></p>
+            <p><strong>Price:</strong> <span th:text="${reservation.price}"></span></p>
+        </div>
+    </div>
+
+    <a href="/" class="btn btn-dark mt-4">Back to Reservations List</a>
+</div>
+
+<!-- Add Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
