@@ -8,10 +8,8 @@ COPY --chmod=0755 mvnw mvnw
 COPY .mvn/ .mvn/
 COPY pom.xml .
 
-# Cache Maven dependencies
-RUN --mount=type=cache,target=/root/.m2 \
+RUN --mount=type=cache,target=/root/.m2,id=maven-cache \
     ./mvnw dependency:go-offline -DskipTests
-
 
 FROM deps as package
 
@@ -20,17 +18,15 @@ WORKDIR /build
 COPY src/ src/
 COPY pom.xml .
 
-RUN --mount=type=cache,target=/root/.m2 \
+RUN --mount=type=cache,target=/root/.m2,id=maven-cache \
     ./mvnw package -DskipTests && \
     mv target/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout).jar target/app.jar
-
 
 FROM package as extract
 
 WORKDIR /build
 
 RUN java -Djarmode=layertools -jar target/app.jar extract --destination target/extracted
-
 
 FROM eclipse-temurin:17-jre-jammy AS final
 
@@ -51,5 +47,4 @@ COPY --from=extract /build/target/extracted/snapshot-dependencies/ ./
 COPY --from=extract /build/target/extracted/application/ ./
 
 EXPOSE 8080
-
 ENTRYPOINT [ "java", "org.springframework.boot.loader.JarLauncher" ]
